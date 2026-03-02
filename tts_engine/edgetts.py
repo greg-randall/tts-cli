@@ -24,12 +24,8 @@ class EdgeTTSEngine(TTSEngine):
         self, text: str, output_path: Path, chunk_index: int = 1
     ) -> SynthesisResult:
         """Synthesize text to speech using Edge TTS"""
-        print(f"📦 Processing text chunk {chunk_index} ({len(text)} characters)")
-        
         try:
-            print(f"   🔊 Generating audio with Edge TTS...")
             asyncio.run(self._synthesize_async(text, output_path))
-            print(f"   💾 Saved audio to {output_path}")
             
             return SynthesisResult(
                 output_file=output_path,

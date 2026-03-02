@@ -18,7 +18,6 @@ class KokoroEngine(TTSEngine):
     def synthesize(
         self, text: str, output_path: Path, chunk_index: int = 1
     ) -> SynthesisResult:
-        print(f"📦 Processing text chunk {chunk_index} ({len(text)} characters)")
         try:
             generator = self.pipeline(
                 text,
@@ -28,7 +27,6 @@ class KokoroEngine(TTSEngine):
             )
             results = []
             for segment_number, (_, _, audio) in enumerate(generator, start=1):
-                print(f"   🔊 Audio segment {chunk_index}.{segment_number}")
                 filename = output_path.with_name(
                     f"{output_path.stem}_s{segment_number:03d}.wav"
                 )

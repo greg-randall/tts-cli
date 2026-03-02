@@ -4,3 +4,4 @@ soundfile==0.13.1
 openai==1.61.1
 edge-tts==6.1.9
 faster-qwen3-tts
+tqdm

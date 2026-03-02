@@ -1,8 +1,9 @@
 # cli.py
 import argparse
-import concurrent.futures
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
+
+from tqdm import tqdm
 
 from tts_engine.config import TTSConfig
 from tts_engine.registry import TTS_REGISTRY
@@ -66,31 +67,13 @@ def create_arg_parser():
             help=f"({engines_str}) {info['description']}",
         )
 
+    # Add benchmark flag
+    parser.add_argument(
+    )
+
     return parser
 
 
-def main():
-    parser = create_arg_parser()
-    args = parser.parse_args()
-
-    # Convert args to dict, only including non-None values
-    cli_args = {k: v for k, v in vars(args).items() if v is not None}
-
-    # Create config using factory method
-    config = TTSConfig.create(args.engine, cli_args)
-
-    # Read input text and calculate total characters
-    with open(args.input_file) as f:
-        input_text = f.read()
-
-    total_chars = calculate_total_characters(input_text, config.engine_config.chunk_size)
-
-    # Calculate and confirm costs if necessary
-    total_cost = calculate_cost(total_chars, config.engine_config.cost_per_char)
-
-    if not get_user_confirmation(total_cost):
-        print("Operation cancelled by user.")
-        return
 
     # Create engine instance from registry
     engine = TTS_REGISTRY[args.engine]["engine"](config.engine_config)
@@ -98,6 +81,9 @@ def main():
     # Process text
     chunker = TextChunker(config.engine_config.chunk_size)
     chunks = chunker.process(input_text)
+
+    # Run thread benchmark if requested
+    if args.thread_benchmark:
 
     # Create output directory
     FileManager.create_output_dir(config.output_dir)
@@ -114,9 +100,10 @@ def main():
             for i, chunk in enumerate(chunks)
         ]
 
-        for future in concurrent.futures.as_completed(futures):
-            result = future.result()
-            print(f"Generated: {result.output_file}")
+        with tqdm(total=len(chunks), desc="Synthesizing", unit="chunk") as pbar:
+            for future in as_completed(futures):
+                future.result()
+                pbar.update(1)
 
 
 if __name__ == "__main__":

@@ -16,7 +16,6 @@ class Qwen3TTSEngine(TTSEngine):
         self.model = FasterQwen3TTS.from_pretrained(config.model, device="cuda", dtype=torch.float16)
 
     def synthesize(self, text: str, output_path: Path, chunk_index: int = 1) -> SynthesisResult:
-        print(f"Processing text chunk {chunk_index} ({len(text)} characters)")
         try:
             mode = self.config.mode
             if mode == "clone":
@@ -44,7 +43,6 @@ class Qwen3TTSEngine(TTSEngine):
                 raise ValueError(f"Unknown mode: {mode}. Use clone, design, or custom.")
 
             FileManager.safe_write_audio(output_path, wavs[0], sr)
-            print(f"   Saved chunk {chunk_index} to {output_path}")
 
             return SynthesisResult(
                 output_file=output_path,
