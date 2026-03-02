@@ -83,7 +83,7 @@ def main():
     with open(args.input_file) as f:
         input_text = f.read()
 
-    total_chars = calculate_total_characters(input_text, config.chunk_size)
+    total_chars = calculate_total_characters(input_text, config.engine_config.chunk_size)
 
     # Calculate and confirm costs if necessary
     total_cost = calculate_cost(total_chars, config.engine_config.cost_per_char)
@@ -96,7 +96,7 @@ def main():
     engine = TTS_REGISTRY[args.engine]["engine"](config.engine_config)
 
     # Process text
-    chunker = TextChunker(config.chunk_size)
+    chunker = TextChunker(config.engine_config.chunk_size)
     chunks = chunker.process(input_text)
 
     # Create output directory

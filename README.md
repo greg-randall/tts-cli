@@ -87,19 +87,21 @@ Do you want to proceed? (y/N): y
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `--output-dir` | Output directory for audio files | `output` |
-| `--chunk-size` | Maximum characters per chunk | 4000 |
 | `--max-workers` | Number of parallel workers | 4 |
+| `--chunk-size` | Maximum characters per chunk | Engine-dependent (see below) |
 
 ### Edge TTS Engine Options
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
 | `--voice` | Voice to use (e.g., `en-US-ChristopherNeural`, `en-GB-SoniaNeural`) | `en-US-ChristopherNeural` |
+| `--chunk-size` | Maximum characters per chunk | 4000 |
 
 ### Qwen3-TTS Engine Options
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `--chunk-size` | Maximum characters per chunk | 2000 |
 | `--mode` | Generation mode: `clone`, `design`, or `custom` | `clone` |
 | `--model` | HuggingFace model ID | `Qwen/Qwen3-TTS-12Hz-1.7B-Base` |
 | `--language` | Language for synthesis | `English` |
@@ -112,6 +114,7 @@ Do you want to proceed? (y/N): y
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `--chunk-size` | Maximum characters per chunk | 4000 |
 | `--lang-code` | Language code for synthesis | "a" |
 | `--speed` | Speech speed multiplier | 1.0 |
 | `--voice` | Voice to use `af_bella`, `af_nicole`, `af_sarah`, `af_sky`, `bf_emma`, `bf_isabella`, `am_adam`, `am_michael`, `bm_george`, `bm_lewis`| "am_michael" |
@@ -121,6 +124,7 @@ Do you want to proceed? (y/N): y
 
 | Parameter | Description | Default |
 |-----------|-------------|---------|
+| `--chunk-size` | Maximum characters per chunk | 4000 |
 | `--model` | OpenAI TTS model | "tts-1-hd" |
 | `--voice` | Voice to use: `alloy`, `ash`, `coral`, `echo`, `fable`, `onyx`, `nova`, `sage`, `shimmer`| "alloy" |
 | `--response-format` | Audio format for output | "wav" |
@@ -130,9 +134,9 @@ Available OpenAI voices: `alloy`, `ash`, `coral`, `echo`, `fable`, `onyx`, `nova
 ## Full Usage
 
 ```bash
-usage: cli.py [-h] [--engine {kokoro,openai,edge-tts,qwen3-tts}] [--output-dir OUTPUT_DIR] 
-              [--chunk-size CHUNK_SIZE] [--max-workers MAX_WORKERS] 
-              [--lang-code LANG_CODE] [--speed SPEED] [--voice VOICE] 
+usage: cli.py [-h] [--engine {kokoro,openai,edge-tts,qwen3-tts}] [--output-dir OUTPUT_DIR]
+              [--max-workers MAX_WORKERS] [--chunk-size CHUNK_SIZE]
+              [--lang-code LANG_CODE] [--speed SPEED] [--voice VOICE]
               [--model MODEL] [--response-format RESPONSE_FORMAT]
               [--mode MODE] [--language LANGUAGE] [--ref-audio REF_AUDIO]
               [--ref-text REF_TEXT] [--instruct INSTRUCT] [--speaker SPEAKER]

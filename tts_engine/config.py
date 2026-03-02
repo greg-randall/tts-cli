@@ -21,6 +21,7 @@ class TTSEngineConfig(BaseConfig):
 
     engine_name: str = Field(..., frozen=True)
     cost_per_char: float = Field(default=0.0, description="Cost per character in USD")
+    chunk_size: int = Field(default=4000, description="Maximum characters per chunk")
 
 
 class KokoroConfig(TTSEngineConfig):
@@ -56,6 +57,7 @@ class Qwen3TTSConfig(TTSEngineConfig):
     ref_text: str = Field(default="", description="Transcript of reference audio for voice cloning")
     instruct: str = Field(default="Warm, clear narrator voice.", description="Voice design instruction (design mode)")
     speaker: str = Field(default="aiden", description="Speaker ID (custom mode)")
+    chunk_size: int = Field(default=2000, description="Maximum characters per chunk")
     cost_per_char: float = Field(default=0.0, description="Cost per character in USD")
 
 
@@ -66,7 +68,6 @@ class TTSConfig(BaseConfig):
     output_dir: Path = Field(
         default=Path("output"), description="Output directory for audio files"
     )
-    chunk_size: int = Field(default=4000, description="Maximum characters per chunk")
     max_workers: int = Field(default=4, description="Number of parallel workers")
 
     @classmethod
