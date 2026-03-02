@@ -47,6 +47,18 @@ class EdgeTTSConfig(TTSEngineConfig):
     cost_per_char: float = Field(default=0.0, description="Cost per character in USD")
 
 
+class Qwen3TTSConfig(TTSEngineConfig):
+    engine_name: Literal["qwen3-tts"] = "qwen3-tts"
+    mode: str = Field(default="clone", description="Generation mode: clone, design, or custom")
+    model: str = Field(default="Qwen/Qwen3-TTS-12Hz-1.7B-Base", description="HuggingFace model ID")
+    language: str = Field(default="English", description="Language for synthesis")
+    ref_audio: str = Field(default="", description="Path to reference audio for voice cloning")
+    ref_text: str = Field(default="", description="Transcript of reference audio for voice cloning")
+    instruct: str = Field(default="Warm, clear narrator voice.", description="Voice design instruction (design mode)")
+    speaker: str = Field(default="aiden", description="Speaker ID (custom mode)")
+    cost_per_char: float = Field(default=0.0, description="Cost per character in USD")
+
+
 class TTSConfig(BaseConfig):
     """Main configuration supporting multiple engines"""
 

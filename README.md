@@ -4,7 +4,7 @@ A modular command-line interface for text-to-speech synthesis, supporting multip
 
 ## Features
 
-- Supports multiple TTS engines (currently OpenAI and Kokoro)
+- Supports multiple TTS engines (OpenAI, Kokoro, Edge TTS, and Qwen3-TTS)
 - Automatic text chunking with configurable chunk sizes
 - Parallel processing with multiple workers
 - Cost estimation and confirmation for paid services
@@ -21,6 +21,8 @@ python -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 ```
+
+*Note: Qwen3-TTS requires a GPU with CUDA support for optimal performance and will install `torch` as a dependency.*
 
 ### Environment Setup
 
@@ -45,6 +47,22 @@ Convert text to speech using default settings (Kokoro engine):
 
 ```bash
 python cli.py input.txt --output-dir ./output_audio
+```
+
+### Using Edge TTS (Free, High Quality)
+
+```bash
+python cli.py input.txt --engine edge-tts --voice en-US-ChristopherNeural
+```
+
+### Using Qwen3-TTS (Local Voice Cloning)
+
+```bash
+# Voice Cloning Mode
+python cli.py input.txt --engine qwen3-tts --mode clone --ref-audio sample.wav --ref-text "Text from sample audio."
+
+# Voice Design Mode
+python cli.py input.txt --engine qwen3-tts --mode design --instruct "A calm, deep male voice with a slight British accent."
 ```
 
 ### Using Kokoro Engine with Custom Voice
@@ -72,6 +90,24 @@ Do you want to proceed? (y/N): y
 | `--chunk-size` | Maximum characters per chunk | 4000 |
 | `--max-workers` | Number of parallel workers | 4 |
 
+### Edge TTS Engine Options
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--voice` | Voice to use (e.g., `en-US-ChristopherNeural`, `en-GB-SoniaNeural`) | `en-US-ChristopherNeural` |
+
+### Qwen3-TTS Engine Options
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--mode` | Generation mode: `clone`, `design`, or `custom` | `clone` |
+| `--model` | HuggingFace model ID | `Qwen/Qwen3-TTS-12Hz-1.7B-Base` |
+| `--language` | Language for synthesis | `English` |
+| `--ref-audio` | Path to reference audio for voice cloning | `""` |
+| `--ref-text` | Transcript of reference audio for voice cloning | `""` |
+| `--instruct` | Voice design instruction (design mode) | `Warm, clear narrator voice.` |
+| `--speaker` | Speaker ID (custom mode) | `aiden` |
+
 ### Kokoro Engine Options
 
 | Parameter | Description | Default |
@@ -94,10 +130,12 @@ Available OpenAI voices: `alloy`, `ash`, `coral`, `echo`, `fable`, `onyx`, `nova
 ## Full Usage
 
 ```bash
-usage: cli.py [-h] [--engine {kokoro,openai}] [--output-dir OUTPUT_DIR] 
+usage: cli.py [-h] [--engine {kokoro,openai,edge-tts,qwen3-tts}] [--output-dir OUTPUT_DIR] 
               [--chunk-size CHUNK_SIZE] [--max-workers MAX_WORKERS] 
               [--lang-code LANG_CODE] [--speed SPEED] [--voice VOICE] 
-              [--model MODEL] [--response-format RESPONSE_FORMAT] 
+              [--model MODEL] [--response-format RESPONSE_FORMAT]
+              [--mode MODE] [--language LANGUAGE] [--ref-audio REF_AUDIO]
+              [--ref-text REF_TEXT] [--instruct INSTRUCT] [--speaker SPEAKER]
               input_file
 ```
 
@@ -119,4 +157,5 @@ The project is designed to be easily extensible. To add a new TTS engine:
 - NLTK for text chunking
 - SoundFile for audio processing
 - Pydantic for configuration management
-- OpenAI and Kokoro SDKs for respective engines
+- OpenAI, Kokoro, Edge TTS, and Faster-Qwen3-TTS SDKs
+- PyTorch (for Qwen3-TTS)
