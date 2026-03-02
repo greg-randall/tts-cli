@@ -4,6 +4,7 @@ __pycache__
 __pycache__/
 *output/
 *.wav
+*.pkf
 *.mp3
 *.flac
 *.opus
